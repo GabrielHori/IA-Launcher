@@ -1,0 +1,125 @@
+[
+    {
+        "id": "session_temp",
+        "title": "Salut ca va ? ",
+        "messages": [
+            {
+                "role": "user",
+                "content": "Salut ca va ? "
+            },
+            {
+                "role": "assistant",
+                "content": "Bonjour! Ca va bien, merci de demander. Et vous, comment allez-vous aujourd'hui? Je suis content de pouvoir parler avec vous.😊"
+            },
+            {
+                "role": "user",
+                "content": "je code donc ca va "
+            },
+            {
+                "role": "assistant",
+                "content": "C'est génial que tu codes ! Si tu as des questions sur un langage de programmation spécifique, sur la structure d'un programme ou tout autre sujet lié au codage, n'hésite pas à me poser ta question. Je serai ravi de t'aider ! Que ce soit pour comprendre un concept, résoudre un problème technique ou simplement explorer des idées nouvelles en programmation. Allez, raconte-moi plus sur ton projet si tu le souhaites !"
+            },
+            {
+                "role": "user",
+                "content": "Salut ca va "
+            },
+            {
+                "role": "assistant",
+                "content": "Bonjour ! Ca va bien, merci de demander. Comment allez-vous aujourd'hui ? N'hésitez pas à me parler de ce sur quoi vous avez besoin d'aide ou à me poser des questions que vous pourriez avoir."
+            },
+            {
+                "role": "user",
+                "content": "comment tu vas "
+            },
+            {
+                "role": "assistant",
+                "content": "Je vais bien, thank you! En tant qu'intelligence artificielle, je n'ai pas vraiment de sentiments, mais je suis prêt à aider et à répondre aux questions que vous pourriez avoir. Comment puis-je vous aider aujourd'hui ?"
+            },
+            {
+                "role": "user",
+                "content": "combien font 2+2"
+            },
+            {
+                "role": "assistant",
+                "content": "2 + 2 fait 4."
+            },
+            {
+                "role": "user",
+                "content": "tu vas bien ? "
+            },
+            {
+                "role": "assistant",
+                "content": "Je vais bien, merci ! Comment allez-vous vous-même ? Est-ce que vous avez besoin d'aide pour quelque chose en particulier ?"
+            }
+        ],
+        "model": "qwen2.5:7b"
+    },
+    {
+        "id": "chat_1766876121349",
+        "title": "Salut ca va...",
+        "messages": [
+            {
+                "role": "user",
+                "content": "Salut ca va"
+            },
+            {
+                "role": "assistant",
+                "content": "Bonjour! Ca va, merci. Comment ça va de votre côté ? Et dans quelle langue souhaitez-vous communiquer ? Je peux répondre aussi bien en français qu'en anglais ou d'autres langues."
+            }
+        ]
+    },
+    {
+        "id": "chat_1766876417949",
+        "title": "Parfait...",
+        "model": "deepseek-r1:1.5b",
+        "messages": [
+            {
+                "role": "user",
+                "content": "Parfait"
+            },
+            {
+                "role": "assistant",
+                "content": "It seems like you're asking about \"parfait.\" Could you clarify or provide more context? Here are a few possibilities:\n\n1. **Vermont French Parfait**: A type of French wine produced in Vermont, known for its intense flavor and complexity.\n   \n2. **Parfait (verb)**: To \"put together\" or \"complete\" something by adding the smallest possible pieces.\n\n3. **Other Contexts**: If you're referring to something else with the word \"parfait,\" please provide more details so I can assist better!\n\nLet me know how I can help!"
+            },
+            {
+                "role": "user",
+                "content": "non c'etait juste pour un test tu es actuellement sur mon appli ia et donc je teste bien si entre 2 changement d'ia j'ai bien l'historique qui switch "
+            },
+            {
+                "role": "assistant",
+                "content": "Il semble que vous avez un problème avec votre application en ce quiAGE. Si vous avez des changements récents, il est possible qu'il soit malgré des changes que vous avez ajoutées, et/or que vous avez perdu de l'information ou que la logique technique n'a pas gagné le temps correct.\n\nSi vous avez un problème avec la gestion du history ou la mise à jour, vous pourriez idealiser votre question en identifiant exactement ce problème et en veillant à identifier les points d'éthique ou les parties concernées par votre application. Peut-être que vous souhaitiez aussi demander des suggestions sur le développement de vos applications.\n\nSi vous avez des questions concernant la sécurité, je serais ravi de vous aider en determinez ce que vous avez perdu. Si vous avez besoin d'aide avec une vérification de logique ou un ajustement technique, je serai ravi de vous fournir des informations et des outils utiles pour le development."
+            },
+            {
+                "role": "user",
+                "content": "Salut mon ami l'ia "
+            },
+            {
+                "role": "assistant",
+                "content": "Hello! I'm here and ready to help. How can I assist you today?"
+            },
+            {
+                "role": "user",
+                "content": "tu peux maider 2+2"
+            },
+            {
+                "role": "assistant",
+                "content": "Claro, summemos los números:\n\n\\[\n2 + 2 = \\boxed{4}\n\\]\n\n**Respuesta Final:**\n\n\\boxed{4}"
+            }
+        ]
+    },
+    {
+        "id": "chat_1766881809586",
+        "title": "comment tu vas ? ...",
+        "model": "deepseek-r1:1.5b",
+        "messages": [
+            {
+                "role": "user",
+                "content": "comment tu vas ? "
+            },
+            {
+                "role": "assistant",
+                "content": "Je suis actif sur le platforme, je peux vous aider à ressonner et en analyser une phrase. Si vous avez besoin d'aide avec quelque chose, n'hésitez pas à me poser des questions! 😊"
+            }
+        ]
+    }
+]
