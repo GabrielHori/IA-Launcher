@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { User, Sparkles, ChevronDown, Check, Sun, Moon, RefreshCw } from 'lucide-react';
+import { User, Sparkles, ChevronDown, Check, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { translations } from '../constants/translations';
 
@@ -10,21 +10,39 @@ const TopBar = ({ activeTab, selectedModel, setSelectedModel, userName, language
   const { isDarkMode, toggleTheme } = useTheme();
   const t = translations[language] || translations.en;
 
-  const titles = { dashboard: t.nav.dashboard, files: t.nav.files, settings: t.nav.settings, chat: t.nav.chat };
+  const titles = { 
+    dashboard: t.nav.dashboard, 
+    files: t.nav.files, 
+    settings: t.nav.settings, 
+    chat: t.nav.chat 
+  };
 
   const fetchModels = async () => {
     try {
+      // Appel vers la nouvelle route du backend
       const res = await fetch("http://localhost:11451/api/v1/models");
+      if (!res.ok) throw new Error("API Error");
+      
       const data = await res.json();
+      // On extrait la liste des modèles (gère le format Ollama {models: []})
       const modelsList = Array.isArray(data) ? data : (data.models || []);
+      
       setAvailableModels(modelsList);
-      if (modelsList.length > 0 && !selectedModel) setSelectedModel(modelsList[0].name);
-    } catch (e) { console.error(e); }
+      
+      // Sélectionne le premier modèle par défaut s'il n'y en a pas
+      if (modelsList.length > 0 && !selectedModel) {
+        setSelectedModel(modelsList[0].name);
+      }
+    } catch (e) { 
+      console.error("Failed to fetch models:", e); 
+    }
   };
 
   useEffect(() => {
     fetchModels();
-    const handleClickOutside = (e) => { if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setIsOpen(false); };
+    const handleClickOutside = (e) => { 
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setIsOpen(false); 
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -40,10 +58,12 @@ const TopBar = ({ activeTab, selectedModel, setSelectedModel, userName, language
       </div>
 
       <div className="flex items-center gap-8">
+        {/* Bouton de Thème */}
         <button onClick={toggleTheme} className={`p-3 rounded-[18px] border transition-all hover:scale-110 active:scale-95 shadow-lg ${isDarkMode ? 'bg-white/5 border-white/10 text-yellow-400' : 'bg-black/5 border-black/10 text-indigo-600'}`}>
           {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
+        {/* Sélecteur de Modèle */}
         <div className="relative" ref={dropdownRef}>
           <button onClick={() => setIsOpen(!isOpen)} 
             className={`flex items-center border rounded-[20px] px-6 py-3 gap-4 transition-all min-w-[240px] justify-between shadow-xl ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`}>
@@ -53,24 +73,29 @@ const TopBar = ({ activeTab, selectedModel, setSelectedModel, userName, language
                 {selectedModel ? selectedModel.split(':')[0] : "SELECT MODEL"}
               </span>
             </div>
-            <ChevronDown size={16} className={`transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown size={16} className={`transition-transform duration-500 ${isOpen ? 'rotate-180' : ''} ${isDarkMode ? 'text-white/50' : 'text-slate-400'}`} />
           </button>
 
           {isOpen && (
-            <div className={`absolute top-full mt-3 w-full border rounded-[25px] overflow-hidden shadow-2xl z-50 backdrop-blur-2xl animate-in fade-in zoom-in-95 ${isDarkMode ? 'bg-zinc-900/90 border-white/10' : 'bg-white/90 border-black/10'}`}>
+            <div className={`absolute top-full mt-3 w-full border rounded-[25px] overflow-hidden shadow-2xl z-50 backdrop-blur-2xl animate-in fade-in zoom-in-95 ${isDarkMode ? 'bg-zinc-900/95 border-white/10' : 'bg-white/95 border-black/10'}`}>
               <div className="py-3 max-h-72 overflow-y-auto custom-scrollbar">
-                {availableModels.map((m) => (
-                  <div key={m.name} onClick={() => { setSelectedModel(m.name); setIsOpen(false); }}
-                    className={`px-6 py-4 flex items-center justify-between cursor-pointer transition-colors ${selectedModel === m.name ? 'bg-indigo-600 text-white' : 'hover:bg-indigo-500/10'}`}>
-                    <span className="text-[10px] font-black uppercase tracking-widest">{m.name}</span>
-                    {selectedModel === m.name && <Check size={14} />}
-                  </div>
-                ))}
+                {availableModels.length > 0 ? (
+                  availableModels.map((m) => (
+                    <div key={m.name} onClick={() => { setSelectedModel(m.name); setIsOpen(false); }}
+                      className={`px-6 py-4 flex items-center justify-between cursor-pointer transition-colors ${selectedModel === m.name ? 'bg-indigo-600 text-white' : isDarkMode ? 'hover:bg-white/5 text-white/70' : 'hover:bg-black/5 text-slate-700'}`}>
+                      <span className="text-[10px] font-black uppercase tracking-widest">{m.name}</span>
+                      {selectedModel === m.name && <Check size={14} />}
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-6 py-4 text-[9px] font-bold uppercase opacity-40 text-center">No models found</div>
+                )}
               </div>
             </div>
           )}
         </div>
 
+        {/* Profil Utilisateur */}
         <div className={`flex items-center gap-5 border-l pl-8 ${isDarkMode ? 'border-white/5' : 'border-black/5'}`}>
           <div className="text-right hidden sm:block">
             <p className={`text-xs font-black italic uppercase tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{userName || 'Horizon'}</p>
