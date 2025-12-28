@@ -1,0 +1,14 @@
+{
+    "id": "chat_1766952445253",
+    "model": "deepseek-r1:1.5b",
+    "messages": [
+        {
+            "role": "user",
+            "content": "Salut ca va gros enculer"
+        },
+        {
+            "role": "assistant",
+            "content": "Bonjour ! Comment puis-je vous aider aujourd'hui ? 😊"
+        }
+    ]
+}

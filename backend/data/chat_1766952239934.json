@@ -1,0 +1,14 @@
+{
+    "id": "chat_1766952239934",
+    "model": "deepseek-r1:1.5b",
+    "messages": [
+        {
+            "role": "user",
+            "content": "Salut deepseek"
+        },
+        {
+            "role": "assistant",
+            "content": "Hello! How can I assist you today? If you have any questions or need help with something, feel free to ask. 😊"
+        }
+    ]
+}

@@ -1,159 +1,209 @@
-IA‑Launcher / Horizon AI
+# IA-Launcher 🚀
 
-Horizon AI is an advanced launcher for interacting with local language models via Ollama, featuring a futuristic dashboard to monitor system resources and manage AI in real time.
-This documentation is designed for humans and AI: it explains the logic, structure, endpoints, and data flows.
+IA-Launcher is a desktop application that allows users to **run, manage, and interact with local AI models** through a clean and user-friendly interface.
 
-1️⃣ Overview
+The project focuses on **local-first AI**, leveraging tools like **Ollama**, with a Python backend and a modern React frontend, packaged as a desktop application using **Tauri**.
 
-Purpose: Provide a simple, visually appealing interface to use local AI models and monitor system resources.
+---
 
-Tech stack:
+## 🧠 Project Vision
 
-Frontend: React + Vite + Tailwind CSS
+The goal of IA-Launcher is to:
+- Make **local AI models accessible** to non-technical users
+- Provide a **simple UI** to manage AI models and servers
+- Avoid cloud dependency and protect user privacy
+- Serve as a base for future AI-related tools (plugins, automation, monitoring)
 
-Backend: Python (FastAPI or Flask)
+This project is designed to be:
+- Developer-friendly
+- AI-agent-friendly
+- Easily extensible
 
-AI: Ollama (local models)
+---
 
-Key Features:
+## 🏗️ Architecture Overview
 
-Interactive dashboard (CPU / RAM / VRAM)
-
-Day/night UI mode
-
-AI model management (load, prompt, response)
-
-User settings and configuration
-```text
-2️⃣ Overall Architecture
-IA-LAUNCHER/
-├── backend/             # Python API, AI communication, system monitoring
-│   ├── app.py           # Main backend entry point
-│   ├── routes/          # API endpoints
-│   ├── services/        # Ollama integration and monitoring logic
-│   └── config.py        # Parameters and configuration
-├── frontend/            # User interface
-│   ├── src/
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Screens / pages
-│   │   ├── services/    # API calls
-│   │   ├── state/       # React context / hooks
-│   │   └── styles/      # Tailwind config
-├── static/              # Static assets, images
-├── start_horizon.py     # Unified launcher script (backend + frontend)
+```
+IA-Launcher/
+│
+├── frontend/          # React + Vite + Tailwind UI
+│
+├── backend/           # Python backend (FastAPI)
+│   ├── api/           # API routes
+│   ├── services/      # Ollama / AI services logic
+│   ├── models/        # Data models & schemas
+│   └── main.py        # Backend entry point
+│
+├── data/              # Runtime data (models, cache, logs)
+│
+├── start_horizon.py   # Main launcher script
+│
 └── README.md
-
 ```
 
-User → AI Flow
+### 🔄 Data Flow
+1. The frontend UI sends requests to the backend API
+2. The backend communicates with **Ollama**
+3. Ollama runs local AI models
+4. Responses are returned to the UI
 
-User opens Horizon AI.
+---
 
-The frontend initializes the UI and fetches system info via API.
+## ⚙️ Tech Stack
 
-The backend receives requests, prepares prompts, and communicates with Ollama.
+### Frontend
+- React
+- Vite
+- Tailwind CSS
+- JavaScript / JSX
 
-Ollama generates the response and returns it to the backend.
+### Backend
+- Python 3.10+
+- FastAPI
+- Uvicorn
+- Ollama (local AI runtime)
 
-Backend forwards the response to the frontend for display.
+### Desktop
+- Tauri
 
-3️⃣ Installation
-Prerequisites
+---
 
-Node.js v18+
+## 📋 Requirements
 
-Python 3.10+
+### System
+- Windows / Linux (macOS optional)
+- Minimum 8GB RAM recommended
+- GPU optional (CPU supported)
 
-```text
-cd frontend
-npm install
+### Software
+- Node.js >= 18
+- Python >= 3.10
+- Ollama installed and available in PATH
+
+---
+
+## 🧩 Ollama Setup (Required)
+
+Install Ollama:
+```bash
+https://ollama.com
 ```
-```text
+
+Start the Ollama server:
+```bash
 ollama serve
 ```
-```text
+
+Pull a model:
+```bash
+ollama pull mistral
+```
+
+---
+
+## ▶️ How to Run the Project (Development)
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/GabrielHori/IA-Launcher.git
+cd IA-Launcher
+```
+
+### 2️⃣ Backend setup
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
+pip install -r requirements.txt
+```
+
+### 3️⃣ Frontend + Tauri
+```bash
 cd frontend
+npm install
 npm run tauri:dev
 ```
 
+⚠️ Make sure `ollama serve` is running before launching the app.
 
-4️⃣ API Endpoints (Examples)
-POST /api/ask
+---
 
-Description: Sends a prompt to Ollama and retrieves the response.
-```text
-Payload:
+## 🧪 Testing (Planned)
 
-{
-  "prompt": "string"
-}
+- Backend: pytest
+- Frontend: Jest / React Testing Library
+- CI: GitHub Actions
 
+(Currently under development)
 
-Response:
+---
 
-{
-  "response": "string",
-  "usage": {
-    "tokens": 123,
-    "model": "llama-3.2"
-  }
-}
+## 🔐 Security Notes
 
+- No cloud data storage
+- No telemetry by default
+- All AI processing is local
+- No API keys required
 
-Possible Errors:
+---
 
-400: missing prompt
+## 📈 Roadmap
 
-500: Ollama unavailable
+### Core
+- [x] Local AI execution via Ollama
+- [x] Desktop app via Tauri
+- [ ] Model manager (install/remove models)
+- [ ] AI server status dashboard
+- [ ] Logs & history viewer
 
-GET /api/status
-```
+### Advanced
+- [ ] Plugin system
+- [ ] GPU/CPU usage monitoring
+- [ ] Multiple AI backends
+- [ ] Auto-start with OS
+- [ ] Language selector
 
-Description: Returns current system status and available AI models.
-```text
-Response:
+---
 
-{
-  "cpu": "23%",
-  "ram": "45%",
-  "vram": "67%",
-  "models_available": ["llama-3.2", "mistral-7B", "deepseek"]
-}
-```
+## 🧠 AI-Agent Friendly Notes
 
-5️⃣ Frontend — Key Components
-Folder / File	Purpose
-components/	Reusable UI elements (buttons, cards, modals)
-pages/	Main screens: Dashboard, AI Chat, Settings
-services/	API call functions
-state/	React context for app-wide state (dark/light mode, AI session)
-styles/	Tailwind CSS configuration and custom styling
-6️⃣ Backend — Key Modules
-Folder / File	Purpose
-app.py	Main entry point for backend server
-routes/	Defines all API endpoints for AI interaction and monitoring
-services/	Handles communication with Ollama and system monitoring logic
-config.py	Stores configuration, such as available models and user settings
-7️⃣ Recommendations & Notes
+This project is structured to be easily understood by AI agents:
+- Clear folder responsibilities
+- Explicit entry points
+- Minimal magic
+- Descriptive naming
 
-Keep business logic, AI logic, and UI separate for maintainability.
+AI agents can:
+- Modify frontend independently
+- Extend backend services
+- Add plugins or APIs
+- Generate tests & documentation
 
-Document all endpoints using Swagger/OpenAPI for auto-generation.
+---
 
-Use React Query or similar for frontend API calls to simplify state management.
+## 🛠️ Contributing
 
-Maintain README files per folder for easy onboarding of new developers or AI.
+Contributions are welcome!
 
-8️⃣ AI-Ready Notes
+1. Fork the project
+2. Create a feature branch
+3. Commit your changes
+4. Open a Pull Request
 
-This documentation is intended for an AI to understand the project structure, logic, and data flow:
+Please keep code clean and documented.
 
-Clearly defines all folders and roles
+---
 
-Lists all API endpoints, payloads, and responses
+## 📄 License
 
-Explains frontend component interactions
+MIT License
 
-Shows backend-to-Ollama communication
+---
 
-Contains launch instructions for human or automated agents
+## 👤 Author
+
+**Gabriel (Horizon)**  
+Developer & Creator of IA-Launcher
+
+GitHub: https://github.com/GabrielHori
+
