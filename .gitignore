@@ -11,3 +11,23 @@ IA-Launcher/
 build/                 
 .DS_Store
 Thumbs.db
+# Archives
+*.rar
+*.zip
+
+# Build
+build/
+dist/
+
+# Nested folder mistake
+IA-Launcher/
+
+# Python spec
+*.spec
+
+# IA Models (DO NOT COMMIT)
+data/models/
+data/models/**
+*.bin
+*.gguf
+*.safetensors
