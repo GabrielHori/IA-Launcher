@@ -1,57 +1,159 @@
-# 🌌 Horizon AI - Neural Interface
+IA‑Launcher / Horizon AI
 
-**Horizon AI** est une interface de contrôle avancée et élégante pour la gestion de modèles de langage (LLM) locaux via **Ollama**. Conçue avec une esthétique "Cyberpunk/Futuriste", elle permet de monitorer les ressources système en temps réel et d'interagir avec diverses unités d'intelligence artificielle.
+Horizon AI is an advanced launcher for interacting with local language models via Ollama, featuring a futuristic dashboard to monitor system resources and manage AI in real time.
+This documentation is designed for humans and AI: it explains the logic, structure, endpoints, and data flows.
 
-## ✨ Caractéristiques
+1️⃣ Overview
 
-- 🖥️ **Dashboard Futuriste** : Monitoring CPU, RAM et VRAM avec animations de particules réactives.
-- 🌓 **Mode Jour/Nuit** : Interface adaptative supportant un mode sombre profond et un mode clair épuré.
-- 🤖 **Gestion des Modèles** : Téléchargement et initialisation facilités des modèles (Llama 3.2, Mistral, DeepSeek, etc.).
-- 🛠️ **Configuration Système** : Paramétrage de l'identité de l'opérateur, de la langue et des accès réseau.
-- ⚡ **Stack Moderne** : Propulsé par React (Vite) pour le frontend et Python (FastAPI/Flask) pour le backend.
+Purpose: Provide a simple, visually appealing interface to use local AI models and monitor system resources.
 
-## 🏗️ Structure du Projet
+Tech stack:
 
+Frontend: React + Vite + Tailwind CSS
+
+Backend: Python (FastAPI or Flask)
+
+AI: Ollama (local models)
+
+Key Features:
+
+Interactive dashboard (CPU / RAM / VRAM)
+
+Day/night UI mode
+
+AI model management (load, prompt, response)
+
+User settings and configuration
 ```text
+2️⃣ Overall Architecture
 IA-LAUNCHER/
-├── backend/             # Logique API Python & Services (Ollama, Hardware)
-├── frontend/            # Interface React & Design System (Tailwind CSS)
-├── static/              # Fichiers statiques pour la distribution
-└── start_horizon.py     # Script de lancement unifié
+├── backend/             # Python API, AI communication, system monitoring
+│   ├── app.py           # Main backend entry point
+│   ├── routes/          # API endpoints
+│   ├── services/        # Ollama integration and monitoring logic
+│   └── config.py        # Parameters and configuration
+├── frontend/            # User interface
+│   ├── src/
+│   │   ├── components/  # Reusable UI components
+│   │   ├── pages/       # Screens / pages
+│   │   ├── services/    # API calls
+│   │   ├── state/       # React context / hooks
+│   │   └── styles/      # Tailwind config
+├── static/              # Static assets, images
+├── start_horizon.py     # Unified launcher script (backend + frontend)
+└── README.md
 
 ```
 
-🚀 Installation
-Prérequis
-Node.js (v18+)
+User → AI Flow
 
-Python (3.10+)
+User opens Horizon AI.
 
-Ollama (installé et configuré)
+The frontend initializes the UI and fetches system info via API.
 
-Configuration du Backend
-Accédez au dossier backend : cd backend
+The backend receives requests, prepares prompts, and communicates with Ollama.
 
-Créez un environnement virtuel : python -m venv .venv
+Ollama generates the response and returns it to the backend.
 
-Activez-le :
+Backend forwards the response to the frontend for display.
 
-Windows : .venv\Scripts\activate
+3️⃣ Installation
+Prerequisites
 
-Linux/Mac : source .venv/bin/activate
+Node.js v18+
 
-Installez les dépendances : pip install -r requirements.txt
+Python 3.10+
 
-Configuration du Frontend
-Accédez au dossier frontend : cd frontend
+```text
+cd frontend
+npm install
+```
+```text
+ollama serve
+```
+```text
+cd frontend
+npm run tauri:dev
+```
 
-Installez les paquets : npm install
 
-Lancez le mode développement : npm run dev
+4️⃣ API Endpoints (Examples)
+POST /api/ask
 
-🛠️ Technologies Utilisées
-Frontend : React, Vite, Tailwind CSS, Lucide React (Icônes).
+Description: Sends a prompt to Ollama and retrieves the response.
+```text
+Payload:
 
-Backend : Python, API REST pour la communication avec les sondes matérielles.
+{
+  "prompt": "string"
+}
 
-Thème : Context API pour la gestion dynamique du Dark/Light mode.
+
+Response:
+
+{
+  "response": "string",
+  "usage": {
+    "tokens": 123,
+    "model": "llama-3.2"
+  }
+}
+
+
+Possible Errors:
+
+400: missing prompt
+
+500: Ollama unavailable
+
+GET /api/status
+```
+
+Description: Returns current system status and available AI models.
+```text
+Response:
+
+{
+  "cpu": "23%",
+  "ram": "45%",
+  "vram": "67%",
+  "models_available": ["llama-3.2", "mistral-7B", "deepseek"]
+}
+```
+
+5️⃣ Frontend — Key Components
+Folder / File	Purpose
+components/	Reusable UI elements (buttons, cards, modals)
+pages/	Main screens: Dashboard, AI Chat, Settings
+services/	API call functions
+state/	React context for app-wide state (dark/light mode, AI session)
+styles/	Tailwind CSS configuration and custom styling
+6️⃣ Backend — Key Modules
+Folder / File	Purpose
+app.py	Main entry point for backend server
+routes/	Defines all API endpoints for AI interaction and monitoring
+services/	Handles communication with Ollama and system monitoring logic
+config.py	Stores configuration, such as available models and user settings
+7️⃣ Recommendations & Notes
+
+Keep business logic, AI logic, and UI separate for maintainability.
+
+Document all endpoints using Swagger/OpenAPI for auto-generation.
+
+Use React Query or similar for frontend API calls to simplify state management.
+
+Maintain README files per folder for easy onboarding of new developers or AI.
+
+8️⃣ AI-Ready Notes
+
+This documentation is intended for an AI to understand the project structure, logic, and data flow:
+
+Clearly defines all folders and roles
+
+Lists all API endpoints, payloads, and responses
+
+Explains frontend component interactions
+
+Shows backend-to-Ollama communication
+
+Contains launch instructions for human or automated agents
