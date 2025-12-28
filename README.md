@@ -19,6 +19,8 @@ IA-LAUNCHER/
 ├── static/              # Fichiers statiques pour la distribution
 └── start_horizon.py     # Script de lancement unifié
 
+```
+
 🚀 Installation
 Prérequis
 Node.js (v18+)
