@@ -1,37 +1,13 @@
-# --- IDE & OS ---
-.vscode/
-.idea/
+node_modules/
+dist/
+.env
+__pycache__/
+.venv/
+src-tauri/target/
+src-tauri/.cargo/
+HorizonAI.spec
+IA-Launcher.rar        
+IA-Launcher/           
+build/                 
 .DS_Store
 Thumbs.db
-*.swp
-
-# --- Backend (Python) ---
-backend/__pycache__/
-backend/.venv/
-backend/.env
-backend/*.pyc
-backend/data/*.db
-build/
-dist/
-*.spec
-
-# --- Frontend (Node/Vite) ---
-frontend/node_modules/
-frontend/dist/
-frontend/.env
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
-
-# --- Binaries & Large Files ---
-frontend/bin/ollama.exe
-*.rar
-*.zip
-*.7z
-
-# --- Logs ---
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
