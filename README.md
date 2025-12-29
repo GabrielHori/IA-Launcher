@@ -80,27 +80,6 @@ IA-Launcher/
 - Python >= 3.10
 - Ollama installed and available in PATH
 
----
-
-## 🧩 Ollama Setup (Required)
-
-Install Ollama:
-```bash
-https://ollama.com
-```
-
-Start the Ollama server:
-```bash
-ollama serve
-```
-
-Pull a model:
-```bash
-ollama pull mistral
-```
-
----
-
 ## ▶️ How to Run the Project (Development)
 
 ### 1️⃣ Clone the repository
@@ -109,22 +88,13 @@ git clone https://github.com/GabrielHori/IA-Launcher.git
 cd IA-Launcher
 ```
 
-### 2️⃣ Backend setup
-```bash
-cd backend
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
-pip install -r requirements.txt
-```
 
-### 3️⃣ Frontend + Tauri
+
+### 3️⃣ Frontend + Tauri + Backend
 ```bash
 cd frontend
-npm install
-npm run tauri:dev
+npm run dev
 ```
-
-⚠️ Make sure `ollama serve` is running before launching the app.
 
 ---
 
