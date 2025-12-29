@@ -1,0 +1,22 @@
+{
+    "id": "chat_1766964063322",
+    "model": "deepseek-r1:1.5b",
+    "messages": [
+        {
+            "role": "user",
+            "content": "salut ca va "
+        },
+        {
+            "role": "assistant",
+            "content": "S'oublé! Comment puis-je t'aider aujourd'hui ? 😊"
+        },
+        {
+            "role": "user",
+            "content": "alors comment tu sais que je  suis a arles "
+        },
+        {
+            "role": "assistant",
+            "content": "Bien sûr, si vous avez besoin de plus d'aide avec vos questions ou des informations sur les arrière-pensées (Ar-ar-ses), n'hésitez pas à me le dire ! Comment puis-je vous aider aujourd'hui ? 😊"
+        }
+    ]
+}

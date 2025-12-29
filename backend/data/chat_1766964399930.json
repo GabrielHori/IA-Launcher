@@ -1,0 +1,14 @@
+{
+    "id": "chat_1766964399930",
+    "model": "qwen2.5:7b",
+    "messages": [
+        {
+            "role": "user",
+            "content": "Salut peut tu me coder un html simple"
+        },
+        {
+            "role": "assistant",
+            "content": "Bien sûr ! Voici un exemple de code HTML basique :\n\n```html\n<!DOCTYPE html>\n<html lang=\"fr\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Ma Première Page Web</title>\n</head>\n<body>\n    <h1>Bienvenue sur ma page web</h1>\n    <p>Ceci est un paragraphe de texte.</p>\n    <ul>\n        <li>Point 1</li>\n        <li>Point 2</li>\n        <li>Point 3</li>\n    </ul>\n</body>\n</html>\n```\n\nCe code HTML crée une page web simple avec un titre, un paragraphe et une liste à puces. Vous pouvez le copier et coller dans un éditeur de texte et enregistrer-le avec l'extension `.html`. Ensuite, vous pourrez ouvrir ce fichier dans votre navigateur web pour voir la page.\n\nSi vous avez des questions sur la structure de cet HTML ou si vous voulez ajouter plus de fonctionnalités, n'hésitez pas à me le faire savoir !"
+        }
+    ]
+}

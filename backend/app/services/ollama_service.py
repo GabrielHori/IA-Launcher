@@ -1,11 +1,23 @@
 import httpx
 import json
+import base64
+from app.core.logger import logger
 
 class OllamaService:
     def __init__(self):
-        # Utilisation du port standard 11434 pour garantir la communication
-        self.base_url = "http://localhost:11434" 
+        self.base_url = "http://127.0.0.1:11434" 
         self.timeout = httpx.Timeout(60.0)
+
+    async def check_connection(self):
+        try:
+            async with httpx.AsyncClient(timeout=2.0) as client:
+                response = await client.get(f"{self.base_url}/api/tags")
+                if response.status_code == 200:
+                    return True
+        except Exception as e:
+            logger.warning(f"Ollama non joignable : {e}")
+            return False
+        return False
 
     async def list_models(self):
         url = f"{self.base_url}/api/tags"
@@ -14,11 +26,10 @@ class OllamaService:
                 response = await client.get(url)
                 return response.json()
             except Exception as e:
-                print(f"Erreur connexion Ollama (list): {e}")
+                logger.error(f"Erreur connexion Ollama (list): {e}")
                 return {"models": []}
 
     async def get_detailed_models(self):
-        """Récupère les modèles avec conversion de taille en GB"""
         url = f"{self.base_url}/api/tags"
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             try:
@@ -29,7 +40,7 @@ class OllamaService:
                         m["size_gb"] = round(m.get("size", 0) / (1024**3), 2)
                     return models
             except Exception as e:
-                print(f"Erreur connexion Ollama (detailed): {e}")
+                logger.error(f"Erreur connexion Ollama (detailed): {e}")
             return []
 
     async def pull_model(self, model_name: str):
@@ -41,6 +52,7 @@ class OllamaService:
                         if line:
                             yield f"data: {line}\n\n"
             except Exception as e:
+                logger.error(f"Erreur pull model: {e}")
                 yield f"data: {json.dumps({'error': str(e)})}\n\n"
 
     async def delete_model(self, model_name: str) -> bool:
@@ -50,12 +62,21 @@ class OllamaService:
                 response = await client.request("DELETE", url, json={"name": model_name})
                 return response.status_code == 200
             except Exception as e:
-                print(f"Erreur delete service: {e}")
+                logger.error(f"Erreur delete service: {e}")
                 return False
 
-    async def chat_stream(self, model, prompt, chat_id=None):
+    async def chat_stream(self, model, prompt, chat_id=None, image=None):
         url = f"{self.base_url}/api/generate"
-        payload = {"model": model, "prompt": prompt, "stream": True}
+        
+        payload = {
+            "model": model, 
+            "prompt": prompt, 
+            "stream": True
+        }
+
+        if image:
+            payload["images"] = [image]
+
         async with httpx.AsyncClient(timeout=None) as client:
             try:
                 async with client.stream("POST", url, json=payload) as response:
@@ -63,6 +84,7 @@ class OllamaService:
                         if line:
                             yield f"data: {line}\n\n"
             except Exception as e:
+                logger.error(f"Erreur chat stream: {e}")
                 yield f"data: {json.dumps({'error': str(e)})}\n\n"
 
 ollama_service = OllamaService()

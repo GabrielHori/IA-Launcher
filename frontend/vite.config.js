@@ -1,32 +1,42 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite' // Nécessaire pour Tailwind v4
-import { resolve } from 'path'
+import tailwindcss from '@tailwindcss/vite'
+import path from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(async () => ({
   plugins: [
     react(),
-    tailwindcss(), // Active Tailwind v4 sans avoir besoin de tailwind.config.js
+    tailwindcss(), 
   ],
 
-  // Configuration du serveur pour correspondre à ton tauri.conf.json
+  // Configuration du serveur pour correspondre à tauri.conf.json
   server: {
     port: 5174,
     strictPort: true,
-    host: true, // Recommandé pour Tauri
+    host: "127.0.0.1",
   },
 
-  // Configuration pour la compilation Tauri
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],
   
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+
   build: {
-    // Tauri supporte les navigateurs modernes
     target: process.env.TAURI_PLATFORM == 'windows' ? 'chrome105' : 'safari13',
-    // Ne pas minifier pour le debug
     minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
-    // Produire des sourcemaps pour le debug
     sourcemap: !!process.env.TAURI_DEBUG,
+    
+    rollupOptions: {
+      // On externalise les plugins Tauri pour éviter les erreurs de build Rolldown/Vite
+      external: [
+        '@tauri-apps/api',
+        '@tauri-apps/plugin-dialog'
+      ]
+    }
   }
-})
+}))

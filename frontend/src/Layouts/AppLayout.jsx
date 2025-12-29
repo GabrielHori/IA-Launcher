@@ -12,12 +12,15 @@ import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 const AppLayout = ({ 
   activeTab, setActiveTab, systemStats, selectedChatId, 
   setSelectedChatId, selectedModel, setSelectedModel,
-  isNavOpen, setIsNavOpen, userName, setUserName, language, setLanguage 
+  isNavOpen, setIsNavOpen, userName, setUserName, language, setLanguage,
+  healthStatus // Ajouté ici
 }) => {
   const { isDarkMode } = useTheme();
 
   const renderContent = () => {
-    const props = { language, isDarkMode };
+    // On passe healthStatus dans les props communes
+    const props = { language, isDarkMode, healthStatus };
+    
     switch (activeTab) {
       case 'dashboard': return <Dashboard systemStats={systemStats} setActiveTab={setActiveTab} {...props} />;
       case 'chat': return <AIChatPanel selectedModel={selectedModel} chatId={selectedChatId} setSelectedChatId={setSelectedChatId} {...props} />;

@@ -1,30 +1,58 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Sparkles, MessageSquare, Plus, Cpu, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Send, Sparkles, MessageSquare, Plus, Cpu, ChevronLeft, ChevronRight, Image as ImageIcon, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useTheme } from '../contexts/ThemeContext';
+// Import des traductions
+import { translations } from '../constants/translations';
 
 const AIChatPanel = ({ selectedModel, chatId, setSelectedChatId, language }) => {
   const { isDarkMode } = useTheme();
+  
+  // --- DÉFINITION DE L'OBJET TRADUCTION ---
+  const t = translations[language] || translations.en;
+
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const scrollRef = useRef(null);
+  
+  // --- ÉTATS POUR LES MÉDIAS ---
+  const [selectedFile, setSelectedFile] = useState(null); 
+  const [previewUrl, setPreviewUrl] = useState(null);    
+  const fileInputRef = useRef(null);                       
 
   // 1. Reset et rechargement lors du changement de modèle
   useEffect(() => {
     setMessages([]);
     setSelectedChatId(null);
     fetchConversations();
+    setSelectedFile(null);
+    setPreviewUrl(null);
   }, [selectedModel]);
 
-  // 2. Charger une conversation spécifique quand l'ID change
+  // 2. Charger une conversation spécifique
   useEffect(() => {
     if (chatId) {
       loadSpecificConversation(chatId);
     }
   }, [chatId]);
+
+  // --- LOGIQUE DE GESTION DU FICHIER ---
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const clearFile = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const fetchConversations = async () => {
     try {
@@ -52,21 +80,35 @@ const AIChatPanel = ({ selectedModel, chatId, setSelectedChatId, language }) => 
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim() || isTyping) return;
+    if ((!input.trim() && !selectedFile) || isTyping) return;
 
     const currentChatId = chatId || `chat_${Date.now()}`;
     if (!chatId) setSelectedChatId(currentChatId);
 
-    const userMsg = { role: 'user', content: input };
+    const userMsg = { 
+      role: 'user', 
+      content: input, 
+      image: previewUrl 
+    };
+    
     setMessages(prev => [...prev, userMsg, { role: 'assistant', content: '' }]);
     setInput('');
+    setSelectedFile(null);
+    setPreviewUrl(null);
     setIsTyping(true);
 
     try {
+      const formData = new FormData();
+      formData.append('model', selectedModel);
+      formData.append('prompt', input);
+      if (selectedFile) {
+        formData.append('file', selectedFile);
+      }
+      formData.append('chat_id', currentChatId);
+
       const response = await fetch("http://localhost:11451/api/v1/chat", {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: selectedModel, prompt: input, chat_id: currentChatId }),
+        body: formData,
       });
 
       const reader = response.body.getReader();
@@ -120,7 +162,7 @@ const AIChatPanel = ({ selectedModel, chatId, setSelectedChatId, language }) => 
         <div className={`h-full w-80 p-6 flex flex-col border-r transition-all ${isDarkMode ? 'bg-black/40 border-white/5' : 'bg-white/60 border-slate-200'} ${!isHistoryOpen && 'hidden'}`}>
           
           <div className="mb-6 px-2">
-            <span className={`text-[10px] font-black uppercase tracking-widest ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>Database</span>
+            <span className={`text-[10px] font-black uppercase tracking-widest ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>{t.chat.database}</span>
             <p className="text-[8px] opacity-40 uppercase font-bold">{selectedModel}</p>
           </div>
 
@@ -128,7 +170,7 @@ const AIChatPanel = ({ selectedModel, chatId, setSelectedChatId, language }) => 
             onClick={() => { setSelectedChatId(null); setMessages([]); }} 
             className="w-full py-4 mb-8 bg-indigo-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-3 active:scale-95 shadow-lg shadow-indigo-600/20"
           >
-            <Plus size={14} /> Initialiser session
+            <Plus size={14} /> {t.chat.new_session}
           </button>
 
           <div className="flex-1 overflow-y-auto space-y-2 custom-scrollbar pr-2">
@@ -147,7 +189,6 @@ const AIChatPanel = ({ selectedModel, chatId, setSelectedChatId, language }) => 
           </div>
         </div>
 
-        {/* BOUTON RETRACTATION */}
         <div onClick={() => setIsHistoryOpen(!isHistoryOpen)} className="absolute -right-3 top-0 h-full w-6 z-50 cursor-pointer flex items-center justify-center group">
           <div className="w-5 h-10 rounded-full border bg-white flex items-center justify-center shadow-sm transition-transform group-hover:scale-110">
             {isHistoryOpen ? <ChevronLeft size={12} /> : <ChevronRight size={12} className="text-indigo-500" />}
@@ -165,7 +206,10 @@ const AIChatPanel = ({ selectedModel, chatId, setSelectedChatId, language }) => 
                   ? 'bg-indigo-600 text-white border-indigo-500' 
                   : (isDarkMode ? 'bg-white/[0.03] border-white/10 text-gray-200' : 'bg-white border-slate-200 text-slate-800')
               }`}>
-                {/* CORRECTION REACT-MARKDOWN : className sur la div, pas sur le composant */}
+                {/* Affichage de l'image */}
+                {msg.image && (
+                  <img src={msg.image} alt="User upload" className="rounded-xl mb-4 max-w-full max-h-64 object-cover border border-white/20" />
+                )}
                 <div className={`prose prose-sm max-w-none ${isDarkMode ? 'prose-invert' : 'prose-slate'}`}>
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
@@ -175,28 +219,65 @@ const AIChatPanel = ({ selectedModel, chatId, setSelectedChatId, language }) => 
           {isTyping && (
             <div className="ml-6 flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" />
-              <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest">Flux actif...</span>
+              <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest">{t.chat.active_flux}</span>
             </div>
           )}
         </div>
 
         {/* BARRE D'ENTREE */}
-        <div className="px-6 md:px-12 pb-12">
+        <div className="px-6 md:px-12 pb-12 relative z-20">
+          
+          {/* APERÇU IMAGE */}
+          {previewUrl && (
+            <div className="max-w-5xl mx-auto mb-3 flex items-center gap-4 animate-in fade-in slide-in-from-top-2">
+              <div className="relative group">
+                <img src={previewUrl} alt="Preview" className="h-20 w-20 object-cover rounded-xl border border-indigo-500/50 shadow-lg" />
+                <button 
+                  onClick={clearFile}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+              <span className="text-[10px] font-black text-indigo-400 uppercase tracking-wider">{t.chat.image_attached}</span>
+            </div>
+          )}
+
           <form onSubmit={handleSendMessage} className={`max-w-5xl mx-auto flex items-center rounded-[24px] border transition-all ${isDarkMode ? 'bg-[#060606] border-white/5 focus-within:border-indigo-500/30' : 'bg-slate-50 border-slate-200 focus-within:border-indigo-500/50'}`}>
+            
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              className="hidden" 
+              accept="image/*" 
+              onChange={handleFileChange}
+            />
+
             <div className="pl-7 text-indigo-500/30"><Cpu size={18} /></div>
+            
+            {/* BOUTON IMAGE */}
+            <button 
+              type="button" 
+              onClick={() => fileInputRef.current.click()}
+              className={`p-2 mr-2 rounded-full hover:bg-white/5 transition-colors ${isDarkMode ? 'text-white/30 hover:text-indigo-400' : 'text-slate-400 hover:text-indigo-600'}`}
+              title={t.chat.add_media}
+            >
+              <ImageIcon size={18} />
+            </button>
+
             <input 
               value={input} 
               onChange={(e) => setInput(e.target.value)} 
-              placeholder="ENTRER UNE REQUÊTE SYSTÈME..." 
+              placeholder={selectedFile ? `${t.chat.image_attached} (${t.chat.input_placeholder})` : t.chat.input_placeholder} 
               className="w-full bg-transparent px-6 py-7 text-[11px] font-black uppercase tracking-widest outline-none text-white" 
             />
             <div className="pr-4">
               <button 
                 type="submit" 
-                disabled={isTyping || !input.trim()} 
+                disabled={isTyping || (!input.trim() && !selectedFile)} 
                 className={`px-8 py-3.5 bg-indigo-600 text-white rounded-xl text-[9px] font-black uppercase hover:bg-indigo-500 transition-all active:scale-95 disabled:opacity-20`}
               >
-                Exécuter
+                {t.chat.execute}
               </button>
             </div>
           </form>

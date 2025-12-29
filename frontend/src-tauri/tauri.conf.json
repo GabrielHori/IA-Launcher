@@ -1,27 +1,30 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "ia-launcher",
-  "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "productName": "Horizon AI",
+  "version": "1.0.0",
+  "identifier": "com.horizon.launcher",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5174",
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "vite",
     "beforeBuildCommand": "npm run build"
   },
   "app": {
     "windows": [
       {
-        "title": "frontend",
-        "width": 800,
-        "height": 600,
+        "title": "Horizon AI Core",
+        "width": 1280,
+        "height": 800,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "center": true,
+        "decorations": true
       }
     ],
     "security": {
       "csp": null
-    }
+    },
+    "withGlobalTauri": true
   },
   "bundle": {
     "active": true,
@@ -32,6 +35,14 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+    ],
+    "externalBin": [
+      "binaries/backend"
     ]
+  },
+  "plugins": {
+    "shell": {
+      "all": true
+    }
   }
 }

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { User, Sparkles, ChevronDown, Check, Sun, Moon } from 'lucide-react';
+import { User, Sparkles, ChevronDown, Check, Sun, Moon, Activity, AlertTriangle } from 'lucide-react'; // Ajout des icônes santé
 import { useTheme } from '../contexts/ThemeContext';
 import { translations } from '../constants/translations';
 
 const TopBar = ({ activeTab, selectedModel, setSelectedModel, userName, language }) => {
   const [availableModels, setAvailableModels] = useState([]);
+  const [healthStatus, setHealthStatus] = useState('loading'); // 'loading', 'ok', 'error'
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { isDarkMode, toggleTheme } = useTheme();
@@ -17,19 +18,14 @@ const TopBar = ({ activeTab, selectedModel, setSelectedModel, userName, language
     chat: t.nav.chat 
   };
 
+  // --- Fetch Modèles ---
   const fetchModels = async () => {
     try {
-      // Appel vers la nouvelle route du backend
       const res = await fetch("http://localhost:11451/api/v1/models");
       if (!res.ok) throw new Error("API Error");
-      
       const data = await res.json();
-      // On extrait la liste des modèles (gère le format Ollama {models: []})
       const modelsList = Array.isArray(data) ? data : (data.models || []);
-      
       setAvailableModels(modelsList);
-      
-      // Sélectionne le premier modèle par défaut s'il n'y en a pas
       if (modelsList.length > 0 && !selectedModel) {
         setSelectedModel(modelsList[0].name);
       }
@@ -38,18 +34,64 @@ const TopBar = ({ activeTab, selectedModel, setSelectedModel, userName, language
     }
   };
 
+  // --- Fetch Santé Système (NOUVEAU) ---
+  const checkHealth = async () => {
+    try {
+      const res = await fetch("http://localhost:11451/api/v1/system/health");
+      if (!res.ok) throw new Error("Backend Error");
+      const data = await res.json();
+      setHealthStatus(data.status === 'healthy' ? 'ok' : 'error');
+    } catch (e) {
+      setHealthStatus('error');
+    }
+  };
+
   useEffect(() => {
     fetchModels();
+    checkHealth(); // Premier check
+    const intervalHealth = setInterval(checkHealth, 10000); // Check toutes les 10s
+
     const handleClickOutside = (e) => { 
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setIsOpen(false); 
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      clearInterval(intervalHealth);
+    };
   }, []);
+
+  // --- Rendu Indicateur Santé ---
+  const renderHealthIndicator = () => {
+    if (healthStatus === 'loading') {
+      return (
+        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gray-500">
+          <Activity size={14} className="animate-spin" />
+          <span className="hidden lg:inline">Init...</span>
+        </div>
+      );
+    }
+    if (healthStatus === 'ok') {
+      return (
+        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-emerald-500">
+          <Activity size={14} className="animate-pulse" />
+          <span className="hidden lg:inline">System Online</span>
+        </div>
+      );
+    }
+    return (
+      <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-rose-500">
+        <AlertTriangle size={14} />
+        <span className="hidden lg:inline">System Offline</span>
+      </div>
+    );
+  };
 
   return (
     <header className={`h-22 flex items-center justify-between px-10 border-b z-40 backdrop-blur-xl transition-all duration-500 ${isDarkMode ? 'border-white/5 bg-black/10' : 'border-black/5 bg-white/20'}`}>
       
+      {/* Gauche */}
       <div className="flex items-center gap-5">
         <div className="h-8 w-[3px] bg-indigo-600 rounded-full shadow-[0_0_10px_#6366f1]"></div>
         <h2 className={`text-sm font-black uppercase tracking-[0.4em] italic ${isDarkMode ? 'text-white/40' : 'text-slate-400'}`}>
@@ -57,13 +99,19 @@ const TopBar = ({ activeTab, selectedModel, setSelectedModel, userName, language
         </h2>
       </div>
 
+      {/* Droite */}
       <div className="flex items-center gap-8">
-        {/* Bouton de Thème */}
+        {/* Bouton Thème */}
         <button onClick={toggleTheme} className={`p-3 rounded-[18px] border transition-all hover:scale-110 active:scale-95 shadow-lg ${isDarkMode ? 'bg-white/5 border-white/10 text-yellow-400' : 'bg-black/5 border-black/10 text-indigo-600'}`}>
           {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
-        {/* Sélecteur de Modèle */}
+        {/* Indicateur Santé (NOUVEAU) */}
+        <div className={`flex items-center gap-2 px-4 py-2 rounded-[18px] border shadow-lg ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`}>
+           {renderHealthIndicator()}
+        </div>
+
+        {/* Sélecteur Modèle */}
         <div className="relative" ref={dropdownRef}>
           <button onClick={() => setIsOpen(!isOpen)} 
             className={`flex items-center border rounded-[20px] px-6 py-3 gap-4 transition-all min-w-[240px] justify-between shadow-xl ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`}>
@@ -95,11 +143,11 @@ const TopBar = ({ activeTab, selectedModel, setSelectedModel, userName, language
           )}
         </div>
 
-        {/* Profil Utilisateur */}
+        {/* Profil */}
         <div className={`flex items-center gap-5 border-l pl-8 ${isDarkMode ? 'border-white/5' : 'border-black/5'}`}>
           <div className="text-right hidden sm:block">
             <p className={`text-xs font-black italic uppercase tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{userName || 'Horizon'}</p>
-            <p className="text-[9px] text-emerald-500 font-black mt-1 uppercase tracking-widest opacity-80">Root Access</p>
+            <p className="text-[9px] text-indigo-400 font-black mt-1 uppercase tracking-widest opacity-80">Admin Access</p>
           </div>
           <div className="w-12 h-12 rounded-[18px] bg-indigo-600/10 border border-indigo-500/30 flex items-center justify-center text-indigo-500 shadow-inner">
             <User size={22} />

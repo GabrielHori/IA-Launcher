@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, Rocket, User, Save, Languages, Loader2 } from 'lucide-react';
+import { Wifi, Rocket, User, Save, Languages, Loader2, HardDrive, Search } from 'lucide-react';
 import { translations } from '../constants/translations';
 import { useTheme } from '../contexts/ThemeContext';
+import { open } from '@tauri-apps/plugin-dialog';
 
 export default function Settings({ userName, setUserName, language, setLanguage }) {
   const { isDarkMode } = useTheme();
+  
   const [settings, setSettings] = useState({
     userName: userName || "Horizon",
     language: language || "en",
     internetAccess: false,
     runAtStartup: false,
-    autoUpdate: true
+    autoUpdate: true,
+    ollama_models_path: ""
   });
   const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [modelsPath, setModelsPath] = useState("");
 
   const t = translations[settings.language] || translations.en;
 
@@ -22,6 +26,8 @@ export default function Settings({ userName, setUserName, language, setLanguage 
       .then(res => res.json())
       .then(data => {
         setSettings(data);
+        if (data.ollama_models_path) setModelsPath(data.ollama_models_path);
+        if (data.userName) setUserName(data.userName);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -48,6 +54,31 @@ export default function Settings({ userName, setUserName, language, setLanguage 
       alert(t.settings.error);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const selectFolder = async () => {
+    try {
+      const selected = await open({
+        directory: true,
+        multiple: false,
+        title: "Sélectionner le dossier des modèles Ollama"
+      });
+      if (selected && !Array.isArray(selected)) {
+        setModelsPath(selected); // Mise à jour visuelle
+        
+        // Sauvegarde immédiate dans le backend
+        await fetch("http://localhost:11451/api/v1/settings", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ollama_models_path: selected })
+        });
+        
+        // Alert traduite
+        alert("Dossier des modèles mis à jour. Relancez l'application pour appliquer le changement.");
+      }
+    } catch (err) {
+      console.error("Erreur dossier:", err);
     }
   };
 
@@ -98,28 +129,52 @@ export default function Settings({ userName, setUserName, language, setLanguage 
             </div>
           </SectionContainer>
 
-          {/* INITIALISATION */}
+          {/* INITIALIZATION */}
           <SectionContainer title={t.settings.init_title} icon={Rocket} isDarkMode={isDarkMode}>
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold">{t.settings.startup_label}</p>
-                  <p className={`text-[9px] uppercase mt-1 ${isDarkMode ? 'opacity-40' : 'text-slate-400'}`}>{t.settings.startup_sub}</p>
+                    <p className="text-xs font-bold">{t.settings.startup_label}</p>
+                    <p className={`text-[9px] uppercase mt-1 ${isDarkMode ? 'opacity-40' : 'text-slate-400'}`}>{t.settings.startup_sub}</p>
                 </div>
                 <Toggle active={settings.runAtStartup} onClick={() => toggleSetting('runAtStartup')} />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold">{t.settings.update_label}</p>
-                  <p className={`text-[9px] uppercase mt-1 ${isDarkMode ? 'opacity-40' : 'text-slate-400'}`}>{t.settings.update_sub}</p>
+                    <p className="text-xs font-bold">{t.settings.update_label}</p>
+                    <p className={`text-[9px] uppercase mt-1 ${isDarkMode ? 'opacity-40' : 'text-slate-400'}`}>{t.settings.update_sub}</p>
                 </div>
                 <Toggle active={settings.autoUpdate} onClick={() => toggleSetting('autoUpdate')} />
               </div>
             </div>
           </SectionContainer>
 
-          {/* IDENTITÉ */}
+          {/* --- STOCKAGE (MODIFIÉ POUR TRADUCTION) --- */}
+          <SectionContainer title={t.settings.storage_title} icon={HardDrive} isDarkMode={isDarkMode}>
+            <div className="space-y-4">
+              <p className={`text-xs ${isDarkMode ? 'opacity-60' : 'text-slate-500'}`}>{t.settings.storage_desc}</p>
+              
+              <div className="flex items-center gap-3">
+                <input 
+                    type="text" 
+                    readOnly
+                    value={modelsPath} 
+                    placeholder={t.settings.storage_placeholder}
+                    className={`flex-1 p-3 rounded-xl border text-xs font-mono uppercase outline-none ${isDarkMode ? 'bg-black/40 border-white/5 text-white/40' : 'bg-white border-slate-200 text-slate-400'}`}
+                />
+                <button 
+                   onClick={selectFolder}
+                   className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all active:scale-95"
+                >
+                   <Search size={16} />
+                   {t.settings.storage_browse}
+                </button>
+              </div>
+            </div>
+          </SectionContainer>
+
+          {/* IDENTITY */}
           <div className={`md:col-span-2 p-8 rounded-[32px] border transition-all ${isDarkMode ? 'bg-[#0A0A0A] border-white/5' : 'bg-white border-slate-200 shadow-sm'}`}>
             <div className="flex items-center gap-4 mb-8">
               <User className="text-indigo-500" size={22} />
@@ -151,9 +206,9 @@ export default function Settings({ userName, setUserName, language, setLanguage 
       </div>
     </div>
   );
-}
+};
 
-// Composants internes utilitaires pour garder le code propre
+// Composants internes utilitaires
 const SectionContainer = ({ children, title, icon: Icon, isDarkMode }) => (
   <div className={`p-8 rounded-[32px] border transition-all ${isDarkMode ? 'bg-[#0A0A0A] border-white/5' : 'bg-white border-slate-200 shadow-sm'}`}>
     <div className="flex items-center gap-4 mb-8">

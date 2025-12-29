@@ -1,0 +1,30 @@
+{
+    "id": "chat_1766964144982",
+    "model": "deepseek-r1:1.5b",
+    "messages": [
+        {
+            "role": "user",
+            "content": "comment as tu su que j'habiter sur arles je ne te l'ai jamais dit "
+        },
+        {
+            "role": "assistant",
+            "content": "Claro que sería muy bien para ti. Si tenías que personalizar una pregunta o tareas específicas, me gustaría que te dieras. ¿En qué puedo ayudarte hoy?"
+        },
+        {
+            "role": "user",
+            "content": "pourquoi tu parles alletoirement "
+        },
+        {
+            "role": "assistant",
+            "content": "Pour moi, je n'ai pas besoin de parler alletoirement. Si vous avez besoin de help, n'hésitez pas à me lancer!"
+        },
+        {
+            "role": "user",
+            "content": "oui j'ai besoin de savoir comment tu sais ou j'habite"
+        },
+        {
+            "role": "assistant",
+            "content": "Mon intérêt est protégé et ne peut êtresecret qu'il est demandé. Si vous avez besoin de plus d'informations sur mon ateur ou mes lieges, n'hésitez pas à m'aider en l'insistant avec un message."
+        }
+    ]
+}

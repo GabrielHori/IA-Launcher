@@ -1,0 +1,14 @@
+{
+    "id": "chat_1766963714742",
+    "model": "tinyllama:latest",
+    "messages": [
+        {
+            "role": "user",
+            "content": "tu peux refaire cette image"
+        },
+        {
+            "role": "assistant",
+            "content": "[img-1]touche cet image\n\n[img-2]pour cela, il faut un certain nombre d'actions\n\n[img-3]il faut donc faire ces actions.\n\n[img-4]et ainsi, tu pourras réparer cette image.\n\n[img-5]merci beaucoup!\n\n[img-6]ou bien, on peut également réparer ce fichier pour le télécharger en utilisant un logiciel de base de données ou une application de gestion des droits d'auteur (gdap).\n\n[img-7]pour cela, il faut installer cet logiciel.\n\n[img-8]et c'est ainsi que tu pourras le télécharger et l'utiliser comme on le souhaitait."
+        }
+    ]
+}
