@@ -1,179 +1,104 @@
-# IA-Launcher 🚀
+🚀 Horizon AI Launcher
+Horizon AI Launcher is a modern and ergonomic desktop interface for running local AIs (via Ollama) without needing any technical command-line skills.
 
-IA-Launcher is a desktop application that allows users to **run, manage, and interact with local AI models** through a clean and user-friendly interface.
+Built with React, Tauri, and Python, it offers a complete ecosystem: Chat, Model Management, Configuration, and Console.
 
-The project focuses on **local-first AI**, leveraging tools like **Ollama**, with a Python backend and a modern React frontend, packaged as a desktop application using **Tauri**.
+⚠️ Prerequisites (Tools to install BEFORE)
+To use this project, you must install these 3 tools on your computer first. Do not launch them yet, just install them.
 
----
+Python (Required for the Backend)
+Download version 3.14 (or newer) from: python.org
+IMPORTANT: Check the box Add python.exe to PATH during installation.
+Node.js (Required for the Frontend)
+Download version LTS (Long Term Support) from: nodejs.org
+Ollama (Required for the AI)
+Download the Windows version from: ollama.ai
+This is the software that will run the artificial intelligence.
+📦 Project Installation
+1. Download the Project
+If you don't use Git or just want to test the application quickly:
 
-## 🧠 Project Vision
+Go to the GitHub repository.
+Click the green Code button (top right).
+Select "Download ZIP".
+Extract the downloaded ZIP folder to your main drive (e.g., C:\).
+Rename the extracted folder to IA-Launcher (optional but recommended).
+You should have this folder structure:
+C:\IA-Launcher
+├── backend/
+├── frontend/
+└── ...
 
-The goal of IA-Launcher is to:
-- Make **local AI models accessible** to non-technical users
-- Provide a **simple UI** to manage AI models and servers
-- Avoid cloud dependency and protect user privacy
-- Serve as a base for future AI-related tools (plugins, automation, monitoring)
+2. Install the Backend (Python)
+Open a Command Prompt (PowerShell) or File Explorer and go to the folder C:\IA-Launcher\backend.
 
-This project is designed to be:
-- Developer-friendly
-- AI-agent-friendly
-- Easily extensible
+A. Create the Virtual Environment (One time only)
+Inside the backend folder, type this command:
 
----
+powershell
 
-## 🏗️ Architecture Overview
+python -m venv .venv
+(This creates a .venv folder containing Python isolated for this project).
 
-```
-IA-Launcher/
-│
-├── frontend/          # React + Vite + Tailwind UI
-│
-├── backend/           # Python backend (FastAPI)
-│   ├── api/           # API routes
-│   ├── services/      # Ollama / AI services logic
-│   ├── models/        # Data models & schemas
-│   └── main.py        # Backend entry point
-│
-├── data/              # Runtime data (models, cache, logs)
-│
-├── start_horizon.py   # Main launcher script
-│
-└── README.md
-```
+B. Install Dependencies (One time only)
+Still inside the backend folder, type this command:
 
-### 🔄 Data Flow
-1. The frontend UI sends requests to the backend API
-2. The backend communicates with **Ollama**
-3. Ollama runs local AI models
-4. Responses are returned to the UI
+powershell
 
----
+.venv\Scripts\pip install fastapi uvicorn aiofiles python-multipart
+Wait for everything to install (no red errors).
 
-## ⚙️ Tech Stack
+3. Install the Frontend (Node.js)
+Go to the folder C:\IA-Launcher\frontend.
 
-### Frontend
-- React
-- Vite
-- Tailwind CSS
-- JavaScript / JSX
+In this folder, type this command:
 
-### Backend
-- Python 3.10+
-- FastAPI
-- Uvicorn
-- Ollama (local AI runtime)
+powershell
 
-### Desktop
-- Tauri
+npm install
+(This may take a few minutes. Wait for it to finish).
 
----
+▶️ Launching the Application
+Once Ollama, Python, and Node.js are installed, and the dependencies are loaded, you are ready.
 
-## 📋 Requirements
+Open a terminal in the folder C:\IA-Launcher\frontend.
+Simply type:
+powershell
 
-### System
-- Windows / Linux (macOS optional)
-- Minimum 8GB RAM recommended
-- GPU optional (CPU supported)
-
-### Software
-- Node.js >= 18
-- Python >= 3.10
-- Ollama installed and available in PATH
-
-## ▶️ How to Run the Project (Development)
-
-### 1️⃣ Clone the repository
-```bash
-git clone https://github.com/GabrielHori/IA-Launcher.git
-cd IA-Launcher
-```
-
-
-
-### 3️⃣ Frontend + Tauri + Backend
-```bash
-cd frontend
 npm run dev
-```
+What will happen:
+Backend (Magenta): The console terminal will launch Python and FastAPI. You will see Uvicorn running... and 🚀 Horizon AI Backend started.
+Frontend (Blue): The console terminal will launch Vite and Tauri. The "Horizon AI Core" window will open automatically.
+Ollama: The code will try to launch Ollama automatically for you.
+🔧 Usage
+Dashboard: Manage your AI models (Download, Delete, Install).
+AI Assistant: Chat with your local models.
+Configuration: Change the language, the folder for model storage, etc.
+Explorer: View your chat files and disk space usage.
+⚙️ Advanced Configuration
+The system automatically manages Ollama on startup, but you can customize parameters in the "Configuration" tab of the app:
 
----
+Storage Folder: Choose a different hard drive to store large model files (several GB).
+Language: Switch between French and English.
+🐛 Troubleshooting (Fixing Problems)
+Error: npm : command not found
+You didn't install Node.js. Retry Step 1. Prerequisites.
 
-## 🧪 Testing (Planned)
+Error: python : command not found
+You didn't install Python. Retry Step 1. Prerequisites.
 
-- Backend: pytest
-- Frontend: Jest / React Testing Library
-- CI: GitHub Actions
+The app launches but buttons do nothing ("Backend Offline")
+Verify that Ollama is installed and in the PATH (try typing ollama --version in a command prompt).
+In the Dashboard, check if the CPU/RAM cards move.
+Error: 404 Not Found when deleting a model
+It means the Backend file is not up to date. Restart the npm run dev command to reload the Python server.
 
-(Currently under development)
+Error: UnicodeEncodeError (Emojis crashing)
+The main.py file already contains the fix for Windows. If you have this issue, make sure you have the latest version of the code.
 
----
+🛠️ Development
+To modify the source code:
 
-## 🔐 Security Notes
-
-- No cloud data storage
-- No telemetry by default
-- All AI processing is local
-- No API keys required
-
----
-
-## 📈 Roadmap
-
-### Core
-- [x] Local AI execution via Ollama
-- [x] Desktop app via Tauri
-- [ ] Model manager (install/remove models)
-- [ ] AI server status dashboard
-- [ ] Logs & history viewer
-
-### Advanced
-- [ ] Plugin system
-- [ ] GPU/CPU usage monitoring
-- [ ] Multiple AI backends
-- [ ] Auto-start with OS
-- [ ] Language selector
-
----
-
-## 🧠 AI-Agent Friendly Notes
-
-This project is structured to be easily understood by AI agents:
-- Clear folder responsibilities
-- Explicit entry points
-- Minimal magic
-- Descriptive naming
-
-AI agents can:
-- Modify frontend independently
-- Extend backend services
-- Add plugins or APIs
-- Generate tests & documentation
-
----
-
-## 🛠️ Contributing
-
-Contributions are welcome!
-
-1. Fork the project
-2. Create a feature branch
-3. Commit your changes
-4. Open a Pull Request
-
-Please keep code clean and documented.
-
----
-
-## 📄 License
-
-MIT License
-
----
-
-## 👤 Author
-
-**Gabriel (Horizon)**  
-Developer & Creator of IA-Launcher
-
-GitHub: https://github.com/GabrielHori
-
+Frontend (React): Folder frontend/src. Changes happen in real-time with npm run dev.
+Backend (Python): Folder backend/app. Modify files and restart npm run dev.
+Enjoy your AI Experience! ✨
