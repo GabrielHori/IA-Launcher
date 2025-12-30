@@ -1,7 +1,7 @@
 {
     "ollama_models_path": "C:\\Users\\horiz\\Documents\\ModelIa",
     "internetAccess": true,
-    "language": "fr",
+    "language": "en",
     "userName": "Horizon",
     "runAtStartup": true,
     "autoUpdate": true

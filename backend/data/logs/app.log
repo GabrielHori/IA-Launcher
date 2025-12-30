@@ -146,3 +146,11 @@
 2025-12-30 00:10:45 | INFO     | HorizonAI | 🟢 Ollama lancé
 2025-12-30 00:11:13 | INFO     | HorizonAI | 🗑️ Modèle supprimé : qwen2-math:7b
 2025-12-30 00:11:17 | INFO     | HorizonAI | 🗑️ Modèle supprimé : tinyllama:latest
+2025-12-30 00:37:02 | INFO     | HorizonAI | 🛑 Horizon AI Backend arrêté.
+2025-12-30 00:50:05 | INFO     | HorizonAI | 🚀 Horizon AI Backend démarré.
+2025-12-30 00:50:05 | INFO     | HorizonAI | 📂 Dossier Ollama personnalisé : C:\Users\horiz\Documents\ModelIa
+2025-12-30 00:50:05 | INFO     | HorizonAI | 🟢 Ollama lancé
+2025-12-30 00:51:11 | INFO     | HorizonAI | 📥 Pull lancé : qwen2.5-coder:0.5b
+2025-12-30 00:52:11 | INFO     | HorizonAI | 🗑️ Modèle supprimé : qwen2.5-coder:0.5b
+2025-12-30 00:53:52 | INFO     | HorizonAI | ⚙️ Paramètres utilisateur mis à jour
+2025-12-30 00:54:04 | INFO     | HorizonAI | ⚙️ Paramètres utilisateur mis à jour
