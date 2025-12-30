@@ -12,7 +12,7 @@ Built with React, Tauri, and Python, it offers a complete ecosystem: Chat, Model
 
 ⚠️ Prerequisites (Tools to install BEFORE)
 To use this project, you must install these 3 tools on your computer first. Do not launch them yet, just install them.
->>>>>>> f14c603afbeb2bf810cec9fb474a3f2febe528d8
+>>>>>>> 
 
 Python (Required for the Backend)
 Download version 3.14 (or newer) from: python.org
@@ -58,7 +58,7 @@ Open a Command Prompt (PowerShell) or File Explorer and go to the folder C:\IA-L
 
 A. Create the Virtual Environment (One time only)
 Inside the backend folder, type this command:
->>>>>>> f14c603afbeb2bf810cec9fb474a3f2febe528d8
+>>>>>>> 
 
 powershell
 
@@ -150,7 +150,7 @@ npm install
 
 ▶️ Launching the Application
 Once Ollama, Python, and Node.js are installed, and the dependencies are loaded, you are ready.
->>>>>>> f14c603afbeb2bf810cec9fb474a3f2febe528d8
+>>>>>>> 
 
 Open a terminal in the folder C:\IA-Launcher\frontend.
 Simply type:
@@ -195,7 +195,7 @@ You didn't install Node.js. Retry Step 1. Prerequisites.
 
 Error: python : command not found
 You didn't install Python. Retry Step 1. Prerequisites.
->>>>>>> f14c603afbeb2bf810cec9fb474a3f2febe528d8
+>>>>>>> f
 
 The app launches but buttons do nothing ("Backend Offline")
 Verify that Ollama is installed and in the PATH (try typing ollama --version in a command prompt).
